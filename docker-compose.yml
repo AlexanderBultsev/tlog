@@ -1,0 +1,40 @@
+volumes:
+  pgdata:
+  static:
+  media:
+
+services:
+  db:
+    image: postgres:14
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    depends_on:
+      - db
+    build: ./tlog_backend/
+    env_file: .env
+    volumes:
+      - static:/app/staticfiles
+      - media:/app/mediafiles
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./tlog_frontend/
+    env_file: .env
+    volumes:
+      - static:/staticfiles
+
+  gateway:
+    depends_on:
+      - backend
+      - frontend
+    build: ./gateway/
+    env_file: .env
+    ports:
+      - 80:80
+    volumes:
+      - static:/static
+      - media:/media
