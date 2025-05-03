@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import TagViewSet, TravelViewSet, CommentViewSet
+from .views import TagViewSet, TravelViewSet, CommentViewSet, csrf_token_view
 
 router = DefaultRouter()
 
@@ -12,4 +12,5 @@ router.register(r"tags", TagViewSet, basename="tags")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path('csrf/', csrf_token_view),
 ]

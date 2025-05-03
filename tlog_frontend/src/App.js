@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
+import { initCSRF } from "./services/csrf";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import Header from "./components/Header";
@@ -12,6 +13,10 @@ import TravelCreate from "./components/TravelCreate";
 import TravelEdit from "./components/TravelEdit";
 
 const App = () => {
+  useEffect(() => {
+    initCSRF();
+  }, []);
+
   return (
     <main className="d-flex flex-column gap-3 min-vh-100">
       <Router>

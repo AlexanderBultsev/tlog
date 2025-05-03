@@ -4,7 +4,7 @@ import TravelService from "../services/travel";
 
 const TravelEdit = () => {
   const navigate = useNavigate();
-  const { id } = useParams();  // Получаем ID записи из URL
+  const { id } = useParams();
   const [tags, setTags] = useState([]);
   const [travel, setTravel] = useState(null);
   const [form, setForm] = useState({
@@ -19,19 +19,15 @@ const TravelEdit = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const descriptionTextarea = useRef(null);
 
   useEffect(() => {
-    // Загружаем список тегов
     TravelService.getTags()
       .then((res) => setTags(res.data))
       .catch((err) => {
         console.error(err);
-        setError("Не удалось загрузить теги.");
       });
     
-    // Загружаем данные путешествия по ID для редактирования
     TravelService.getTravelById(id)
       .then((res) => {
         const travel = res.data;
@@ -40,17 +36,17 @@ const TravelEdit = () => {
           title: travel.title,
           description: travel.description,
           location: travel.location,
-          image: travel.image, // или base64 строка
+          image: travel.image,
           start_date: travel.start_date,
           end_date: travel.end_date,
           is_public: travel.is_public,
           tag_ids: travel.tags.map(tag => tag.id),
         });
-        setImagePreview(travel.image); // Если изображение уже есть
+        setImagePreview(travel.image);
       })
       .catch((err) => {
         console.error(err);
-        setError("Не удалось загрузить данные путешествия.");
+        navigate("/travels");
       });
   }, [id]);
 
@@ -90,25 +86,24 @@ const TravelEdit = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      setError("Пожалуйста, выберите корректный файл изображения.");
+      console.log("Пожалуйста, выберите корректный файл изображения.");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     
     if (form.image === travel.image) {
       delete form.image;
     }
 
     try {
-      await TravelService.updateTravel(id, form);  // Отправляем обновленные данные
-      navigate(`/travels/${id}`);  // Перенаправляем на страницу с обновленным путешествием
+      await TravelService.updateTravel(id, form);
+      navigate(`/travels/${id}`);
     } catch (err) {
       console.error(err);
-      setError("Не удалось обновить путешествие.");
+      navigate(`/travels/${id}`);
     } finally {
       setLoading(false);
     }

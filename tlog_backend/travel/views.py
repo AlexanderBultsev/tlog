@@ -1,3 +1,5 @@
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions
 
@@ -8,6 +10,11 @@ from .serializers import (
     CommentSerializer,
 )
 from .permissions import IsOwnerOrReadOnly
+
+
+def csrf_token_view(request):
+    get_token(request)
+    return JsonResponse({"csrfToken": get_token(request)})
 
 
 class TravelViewSet(viewsets.ModelViewSet):

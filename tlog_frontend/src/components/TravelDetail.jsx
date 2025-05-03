@@ -8,7 +8,6 @@ const TravelDetail = () => {
   const { user } = useAuth();
   const [travel, setTravel] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState({ description: "" });
   const [editCommentId, setEditCommentId] = useState(null);
   const [editComment, setEditComment] = useState({ description: "" });
@@ -18,12 +17,11 @@ const TravelDetail = () => {
 
   useEffect(() => {
     setLoading(true);
-    setError(null);
     TravelService.getTravelById(id)
       .then((res) => setTravel(res.data))
       .catch((err) => {
         console.error(err);
-        setError("Путешествие не найдено.");
+        navigate("/travels");
       })
       .finally(() => setLoading(false));
   }, [id]);
@@ -55,7 +53,6 @@ const TravelDetail = () => {
       setNewComment({ description: "" });
     } catch (err) {
       console.error(err);
-      setError("Не удалось добавить комментарий.");
     }
   };
 
@@ -77,7 +74,6 @@ const TravelDetail = () => {
       setEditComment({ description: "" });
     } catch (err) {
       console.error(err);
-      setError("Не удалось обновить комментарий.");
     }
   };
 
@@ -90,7 +86,6 @@ const TravelDetail = () => {
       });
     } catch (err) {
       console.error(err);
-      setError("Не удалось удалить комментарий.");
     }
   };
 
@@ -100,7 +95,6 @@ const TravelDetail = () => {
       navigate("/travels");
     } catch (err) {
       console.error(err);
-      setError("Не удалось удалить статью.");
     }
   };
 
@@ -108,17 +102,6 @@ const TravelDetail = () => {
     return (
       <div className="d-flex flex-column gap-3 align-items-center">
         <h5 className="card-title">Загрузка...</h5>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="d-flex flex-column gap-3 align-items-center">
-        <p className="text-muted">{error}</p>
-        <Link to="/travels" className="btn btn-outline-dark">
-          Вернуться к списку путешествий
-        </Link>
       </div>
     );
   }

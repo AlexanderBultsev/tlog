@@ -1,15 +1,15 @@
-import axios from '../axios';
+import api from '../axios';
 
 const register = (data) => {
-  return axios.post("/api/users/", data);
+  return api.post("/api/users/", data);
 };
 
 const getMe = () => {
-  return axios.get("/api/users/me/");
+  return api.get("/api/users/me/");
 };
 
 const getUserById = (id) => {
-  return axios.get(`/api/users/${id}/`);
+  return api.get(`/api/users/${id}/`);
 }
 
 const UserService = {

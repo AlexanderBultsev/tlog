@@ -7,7 +7,6 @@ const TravelList = () => {
   const location = useLocation();
   const [travels, setTravels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [tag, setTag] = useState(null);
 
@@ -18,7 +17,6 @@ const TravelList = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      setError(null);
       const params = {};
   
       try {
@@ -43,7 +41,6 @@ const TravelList = () => {
   
       } catch (error) {
         console.error(error);
-        setError("Не удалось загрузить путешествия.");
       } finally {
         setLoading(false);
       }

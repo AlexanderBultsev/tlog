@@ -9,7 +9,6 @@ const TravelCreate = () => {
     title: "",
     description: "",
     location: "",
-    image: null,
     start_date: "",
     end_date: "",
     is_public: true,
@@ -17,7 +16,6 @@ const TravelCreate = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const descriptionTextarea = useRef(null);
 
   useEffect(() => {
@@ -25,7 +23,6 @@ const TravelCreate = () => {
       .then((res) => setTags(res.data))
       .catch((err) => {
         console.error(err);
-        setError("Не удалось загрузить теги.");
       });
   }, []);
 
@@ -73,21 +70,21 @@ const TravelCreate = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      setError("Пожалуйста, выберите корректный файл изображения.");
+      e.target.value = null;
+      console.log("Пожалуйста, выберите корректный файл изображения.");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
   
     try {
       await TravelService.createTravel(form); // Отправляем данные через обычный JSON
       navigate("/travels");
     } catch (err) {
       console.error(err);
-      setError("Не удалось создать путешествие.");
+      console.log("Не удалось создать путешествие.");
     } finally {
       setLoading(false);
     }
