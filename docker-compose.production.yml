@@ -1,0 +1,42 @@
+volumes:
+  pgdata:
+  static:
+  media:
+
+services:
+  db:
+    image: postgres:14
+    env_file: .env
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    image: kylepristine/tlog-backend:latest
+    depends_on:
+      - db
+    env_file: .env
+    ports:
+      - 8000:8000
+    volumes:
+      - static:/app/staticfiles
+      - media:/app/mediafiles
+
+  frontend:
+    image: kylepristine/tlog-frontend:latest
+    env_file: .env
+    volumes:
+      - static:/staticfiles
+
+  gateway:
+    depends_on:
+      - backend
+      - frontend
+    image: kylepristine/tlog-gateway:latest
+    env_file: .env
+    ports:
+      - 80:80
+    volumes:
+      - static:/static
+      - media:/media
